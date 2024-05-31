@@ -58,7 +58,7 @@ h1 {
 }
 
 .v-img {
-  width: 400px;
+  width: 250px;
   height: auto;
 }
 
