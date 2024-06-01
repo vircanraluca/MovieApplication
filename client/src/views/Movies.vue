@@ -8,8 +8,18 @@
         <v-card-title>{{ movie.title }}</v-card-title>
         <v-card-subtitle>{{ movie.subtitle }}</v-card-subtitle>
         <v-card-actions>
-          <v-btn color="orange-lighten-2" text>Explore</v-btn>
+          <v-btn color="red" text>Explore</v-btn>
           <v-spacer></v-spacer>
+          <v-btn text @click="addComment(movie)"> Add a Comment </v-btn>
+          <v-btn
+            icon
+            :color="movie.favorited ? 'red' : 'grey'"
+            @click="toggleFavorite(movie)"
+          >
+            <v-icon>{{
+              movie.favorited ? "mdi-heart" : "mdi-heart-outline"
+            }}</v-icon>
+          </v-btn>
           <v-btn
             :icon="movie.show ? 'mdi-chevron-up' : 'mdi-chevron-down'"
             @click="movie.show = !movie.show"
@@ -36,6 +46,7 @@ export default {
         image: "https://m.media-amazon.com/images/I/51NiGlapXlL._AC_SY679_.jpg",
         description: "A moving story of hope, friendship, and redemption.",
         show: false,
+        favorited: false,
       },
       {
         title: "The Godfather",
@@ -43,6 +54,7 @@ export default {
         image: "https://m.media-amazon.com/images/I/51NiGlapXlL._AC_SY679_.jpg",
         description: "A gripping tale of family, power, and betrayal.",
         show: false,
+        favorited: false,
       },
       {
         title: "The Dark Knight",
@@ -50,6 +62,7 @@ export default {
         image: "https://m.media-amazon.com/images/I/51NiGlapXlL._AC_SY679_.jpg",
         description: "A battle between Batman and his archenemy, the Joker.",
         show: false,
+        favorited: false,
       },
       {
         title: "Pulp Fiction",
@@ -58,6 +71,7 @@ export default {
         description:
           "A stylistic, interconnected narrative of crime and redemption.",
         show: false,
+        favorited: false,
       },
       {
         title: "Inception",
@@ -67,6 +81,7 @@ export default {
         description:
           "A mind-bending thriller that dives into the world of dreams.",
         show: false,
+        favorited: false,
       },
       {
         title: "Inception",
@@ -76,9 +91,16 @@ export default {
         description:
           "A mind-bending thriller that dives into the world of dreams.",
         show: false,
+        favorited: false,
       },
     ],
   }),
+
+  methods: {
+    toggleFavorite(movie) {
+      movie.favorited = !movie.favorited;
+    },
+  },
 };
 </script>
 
@@ -86,5 +108,11 @@ export default {
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 40px;
+}
+
+h1 {
+  margin-bottom: 50px;
+  margin-left: 20px;
 }
 </style>

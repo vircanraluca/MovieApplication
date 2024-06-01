@@ -22,8 +22,8 @@ const routes = [
     component: () => import("@/views/Register.vue"),
   },
   {
-    path: "/watchlist",
-    component: () => import("@/views/WatchList.vue"),
+    path: "/movies",
+    component: () => import("@/views/Movies.vue"),
   },
   {
     path: "/favorites",

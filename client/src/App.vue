@@ -25,10 +25,10 @@
             value="login"
           ></v-list-item>
           <v-list-item
-            to="/watchlist"
+            to="/movies"
             prepend-icon="mdi-format-list-bulleted"
-            title="Watchlist"
-            value="watchlist"
+            title="Movies"
+            value="movies"
           ></v-list-item>
           <v-list-item
             to="/favorites"
