@@ -3,7 +3,7 @@
 
   <v-row dense>
     <v-col v-for="(movie, i) in movies" :key="i" cols="12" md="4">
-      <v-card class="mx-auto" max-width="344">
+      <v-card class="mx-auto" max-width="380">
         <v-img :src="movie.image" height="200px" cover></v-img>
         <v-card-title>{{ movie.title }}</v-card-title>
         <v-card-subtitle>{{ movie.subtitle }}</v-card-subtitle>
@@ -21,6 +21,7 @@
             }}</v-icon>
           </v-btn>
           <v-btn
+            class="chevron-btn"
             :icon="movie.show ? 'mdi-chevron-up' : 'mdi-chevron-down'"
             @click="movie.show = !movie.show"
           ></v-btn>
@@ -108,11 +109,16 @@ export default {
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
 }
 
 h1 {
+  margin-top: 20px;
   margin-bottom: 50px;
   margin-left: 20px;
+}
+
+.chevron-btn {
+  margin-right: 8px;
 }
 </style>

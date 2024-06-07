@@ -122,7 +122,7 @@ h1 {
 }
 
 .v-btn {
-  background-color: brown;
+  background-color: #a52a2a;
   color: white;
   margin-bottom: 100px;
   width: 100%;
