@@ -8,42 +8,98 @@
   <v-sheet class="mx-auto" width="300">
     <v-form fast-fail @submit.prevent>
       <v-text-field
-        v-model="firstName"
-        :rules="firstNameRules"
-        label="First name"
+        label="Email"
+        required
+        v-model="email"
+        :rules="emailRules"
       ></v-text-field>
 
       <v-text-field
-        v-model="lastName"
-        :rules="lastNameRules"
-        label="Last name"
+        label="Password"
+        type="password"
+        required
+        v-model="password"
+        :rules="passwordRules"
       ></v-text-field>
 
-      <v-btn class="mt-2" type="submit" block>Submit</v-btn>
+      <v-card-actions>
+        <v-btn class="mt-2" type="submit" @click="register">Submit</v-btn>
+      </v-card-actions>
+      <v-spacer></v-spacer>
+      <div v-if="errorMessage">{{ errorMessage }}</div>
     </v-form>
   </v-sheet>
 </template>
 
 <script>
+import { ref } from "vue";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { useRouter } from "vue-router";
+
 export default {
-  data: () => ({
-    firstName: "",
-    firstNameRules: [
-      (value) => {
-        if (value?.length > 3) return true;
+  setup() {
+    const email = ref("");
+    const password = ref("");
+    const errorMessage = ref("");
+    const router = useRouter();
 
-        return "First name must be at least 3 characters.";
-      },
-    ],
-    lastName: "123",
-    lastNameRules: [
-      (value) => {
-        if (/[^0-9]/.test(value)) return true;
+    const emailRules = [
+      (v) => !!v || "Email is required",
+      (v) => /.+@.+\..+/.test(v) || "Email must be valid",
+    ];
 
-        return "Last name can not contain digits.";
-      },
-    ],
-  }),
+    const passwordRules = [
+      (v) => !!v || "Password is required",
+      (v) => v.length >= 8 || "Password must be at least 8 characters",
+    ];
+
+    const register = async () => {
+      try {
+        const auth = getAuth();
+        const userCredential = await createUserWithEmailAndPassword(
+          auth,
+          email.value,
+          password.value
+        );
+
+        console.log("User registered successfully:", userCredential.user);
+
+        // Faceți solicitarea POST către server
+        const response = await fetch("http://localhost:4000/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: email.value,
+            password: password.value,
+          }),
+        });
+
+        // Verifică statusul răspunsului
+        if (response.ok) {
+          console.log("User registered successfully on the server.");
+          router.push("/");
+        } else {
+          console.error("Server registration error:", response.statusText);
+          errorMessage.value =
+            "An error occurred during registration on the server.";
+        }
+      } catch (error) {
+        console.error("Error during registration:", error);
+        errorMessage.value = "An error occurred during registration.";
+      }
+    };
+
+    return {
+      email,
+      password,
+      errorMessage,
+      emailRules,
+      passwordRules,
+      register,
+    };
+  },
 };
 </script>
 
