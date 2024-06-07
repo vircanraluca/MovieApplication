@@ -1,35 +1,37 @@
 <template>
-  <h1>LOGIN HERE</h1>
-  <v-img
-    src="../assets/popcorn.png"
-    alt="GastroDelights Image"
-    class="mx-auto"
-  />
-  <v-sheet class="mx-auto" width="300">
-    <v-form fast-fail @submit.prevent>
-      <v-text-field
-        label="Email"
-        required
-        v-model="email"
-        :rules="emailRules"
-      ></v-text-field>
+  <div class="login-container">
+    <h1>LOGIN HERE</h1>
+    <v-img
+      src="../assets/popcorn.png"
+      alt="GastroDelights Image"
+      class="mx-auto"
+    />
+    <v-sheet class="mx-auto" width="300">
+      <v-form class="login-form" fast-fail @submit.prevent>
+        <v-text-field
+          label="Email"
+          required
+          v-model="email"
+          :rules="emailRules"
+        ></v-text-field>
 
-      <v-text-field
-        label="Password"
-        type="password"
-        required
-        v-model="password"
-        :rules="passwordRules"
-      ></v-text-field>
+        <v-text-field
+          label="Password"
+          type="password"
+          required
+          v-model="password"
+          :rules="passwordRules"
+        ></v-text-field>
 
-      <v-card-actions>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn class="mt-2" @click="login">LOGIN</v-btn>
+        </v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn class="mt-2" @click="login">LOGIN</v-btn>
-      </v-card-actions>
-      <v-spacer></v-spacer>
-      <div v-if="errorMsg">{{ errorMsg }}</div>
-    </v-form>
-  </v-sheet>
+        <div v-if="errorMsg">{{ errorMsg }}</div>
+      </v-form>
+    </v-sheet>
+  </div>
 </template>
 
 <script>
@@ -122,5 +124,25 @@ h1 {
 .v-btn {
   background-color: brown;
   color: white;
+  margin-bottom: 100px;
+  width: 100%;
+  height: 40px;
+}
+
+.login-container {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.login-form {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 </style>
