@@ -1,7 +1,6 @@
 <template>
   <div>
     <h1>VIEW OUR SELECTION OF MOVIES</h1>
-
     <v-row dense>
       <v-col v-for="(movie, i) in movies" :key="i" cols="12" md="4">
         <v-card class="mx-auto" max-width="380">
@@ -11,11 +10,11 @@
             movie.subtitle
           }}</v-card-subtitle>
           <v-card-actions>
-            <v-btn color="red" text @click="openCommentsTable(movie)"
-              >Comments</v-btn
+            <v-btn color="red" text @click="goToCommentsPage(movie.id)"
+              >View Comments</v-btn
             >
             <v-spacer></v-spacer>
-            <v-btn text @click="openCommentDialog(movie)">Add a Comment</v-btn>
+
             <v-btn
               icon
               :color="movie.favorited ? 'red' : 'grey'"
@@ -40,87 +39,6 @@
         </v-card>
       </v-col>
     </v-row>
-
-    <v-dialog v-model="dialog" max-width="800px">
-      <v-card>
-        <v-card-title>
-          <span class="headline">Comments for {{ selectedMovie?.title }}</span>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-row>
-              <v-col cols="12">
-                <v-textarea
-                  v-model="newComment"
-                  label="Add your comment"
-                  rows="4"
-                  auto-grow
-                ></v-textarea>
-              </v-col>
-              <v-col cols="12">
-                <v-btn color="#a52a2a" text @click="addComment"> Submit </v-btn>
-              </v-col>
-            </v-row>
-            <v-row v-if="comments.length">
-              <v-col cols="12">
-                <h2>Your Comments</h2>
-              </v-col>
-              <v-col
-                cols="12"
-                v-for="(comment, index) in comments"
-                :key="index"
-              >
-                <v-card class="mb-2">
-                  <v-card-text>{{ comment.text }}</v-card-text>
-                </v-card>
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="red darken-1" text @click="closeCommentDialog">
-            Close
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
-    <v-dialog v-model="commentsTableDialog" max-width="800px">
-      <v-card>
-        <v-card-title>
-          <span class="headline">Comments for {{ selectedMovie?.title }}</span>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-row>
-              <v-col cols="12">
-                <v-table>
-                  <thead>
-                    <tr>
-                      <th class="text-left">User</th>
-                      <th class="text-left">Comment</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="(comment, index) in comments" :key="index">
-                      <td>{{ comment.user }}</td>
-                      <td>{{ comment.text }}</td>
-                    </tr>
-                  </tbody>
-                </v-table>
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="red darken-1" text @click="closeCommentsTableDialog">
-            Close
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
   </div>
 </template>
 
@@ -129,11 +47,6 @@ export default {
   data() {
     return {
       movies: [],
-      dialog: false,
-      commentsTableDialog: false,
-      selectedMovie: null,
-      newComment: "",
-      comments: [],
     };
   },
   created() {
@@ -152,38 +65,8 @@ export default {
         console.error("Error fetching movies:", error);
       }
     },
-    openCommentDialog(movie) {
-      this.selectedMovie = movie;
-      this.dialog = true;
-    },
-    closeCommentDialog() {
-      this.dialog = false;
-      this.selectedMovie = null;
-      this.newComment = "";
-    },
-    addComment() {
-      if (this.newComment.trim() !== "") {
-        this.comments.push({ text: this.newComment });
-        this.newComment = "";
-      }
-    },
-    openCommentsTable(movie) {
-      this.selectedMovie = movie;
-      // Fetch comments for the selected movie
-      this.fetchComments(movie);
-      this.commentsTableDialog = true;
-    },
-    closeCommentsTableDialog() {
-      this.commentsTableDialog = false;
-      this.selectedMovie = null;
-    },
-    fetchComments(movie) {
-      // Replace this with actual fetch logic
-      // For example: fetch(`http://localhost:4000/movies/${movie.id}/comments`)
-      this.comments = [
-        { user: "User1", text: "Great movie!" },
-        { user: "User2", text: "Loved the plot and characters." },
-      ];
+    goToCommentsPage(movieId) {
+      this.$router.push({ name: "Comments", params: { id: movieId } });
     },
     toggleFavorite(movie) {
       movie.favorited = !movie.favorited;

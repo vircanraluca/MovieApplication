@@ -33,6 +33,12 @@ const routes = [
     path: "/about",
     component: () => import("@/views/AboutPage.vue"),
   },
+  {
+    path: "/comments/:id",
+    name: "Comments",
+    component: () => import("@/views/Comments.vue"), // Adjust the path as needed
+    props: true,
+  },
 ];
 
 const router = createRouter({
