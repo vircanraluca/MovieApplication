@@ -66,6 +66,31 @@ app.post("/login", async (req, res) => {
   }
 });
 
+app.get("/movies", async (req, res) => {
+  try {
+    const moviesRef = db.collection("movies");
+    const snapshot = await moviesRef.get();
+    if (snapshot.empty) {
+      res.status(404).json({ message: "No movies found." });
+      return;
+    }
+
+    const movies = [];
+    snapshot.forEach((doc) => {
+      movies.push({ id: doc.id, ...doc.data() });
+    });
+
+    res.status(200).json(movies);
+  } catch (error) {
+    console.error("Error fetching movies:", error);
+    res.status(500).json({ error: "An error occurred while fetching movies." });
+  }
+});
+
+app.get("/", (req, res) => {
+  res.send("Server is up and running");
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}!`);
 });

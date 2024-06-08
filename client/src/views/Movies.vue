@@ -39,67 +39,33 @@
 
 <script>
 export default {
-  data: () => ({
-    movies: [
-      {
-        title: "The Shawshank Redemption",
-        subtitle: "Two imprisoned men bond over a number of years.",
-        image: "https://m.media-amazon.com/images/I/51NiGlapXlL._AC_SY679_.jpg",
-        description: "A moving story of hope, friendship, and redemption.",
-        show: false,
-        favorited: false,
-      },
-      {
-        title: "The Godfather",
-        subtitle: "The aging patriarch of an organized crime dynasty.",
-        image: "https://m.media-amazon.com/images/I/51NiGlapXlL._AC_SY679_.jpg",
-        description: "A gripping tale of family, power, and betrayal.",
-        show: false,
-        favorited: false,
-      },
-      {
-        title: "The Dark Knight",
-        subtitle: "When the menace known as the Joker emerges.",
-        image: "https://m.media-amazon.com/images/I/51NiGlapXlL._AC_SY679_.jpg",
-        description: "A battle between Batman and his archenemy, the Joker.",
-        show: false,
-        favorited: false,
-      },
-      {
-        title: "Pulp Fiction",
-        subtitle: "The lives of two mob hitmen intertwine.",
-        image: "https://m.media-amazon.com/images/I/51NiGlapXlL._AC_SY679_.jpg",
-        description:
-          "A stylistic, interconnected narrative of crime and redemption.",
-        show: false,
-        favorited: false,
-      },
-      {
-        title: "Inception",
-        subtitle:
-          "A thief who steals corporate secrets through the use of dream-sharing technology.",
-        image: "https://m.media-amazon.com/images/I/51NiGlapXlL._AC_SY679_.jpg",
-        description:
-          "A mind-bending thriller that dives into the world of dreams.",
-        show: false,
-        favorited: false,
-      },
-      {
-        title: "Inception",
-        subtitle:
-          "A thief who steals corporate secrets through the use of dream-sharing technology.",
-        image: "https://m.media-amazon.com/images/I/51NiGlapXlL._AC_SY679_.jpg",
-        description:
-          "A mind-bending thriller that dives into the world of dreams.",
-        show: false,
-        favorited: false,
-      },
-    ],
-  }),
-
+  data() {
+    return {
+      movies: [],
+    };
+  },
+  created() {
+    this.fetchMovies();
+  },
   methods: {
+    async fetchMovies() {
+      try {
+        const response = await fetch("http://localhost:4000/movies");
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        this.movies = data;
+      } catch (error) {
+        console.error("Error fetching movies:", error);
+      }
+    },
+    addComment(movie) {
+      // Logic to add comment
+    },
     toggleFavorite(movie) {
       movie.favorited = !movie.favorited;
+      // Logic to update favorite status in the backend if necessary
     },
   },
 };
