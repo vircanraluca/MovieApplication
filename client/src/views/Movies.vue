@@ -1,40 +1,86 @@
 <template>
-  <h1>VIEW OUR SELECTION OF MOVIES</h1>
+  <div>
+    <h1>VIEW OUR SELECTION OF MOVIES</h1>
 
-  <v-row dense>
-    <v-col v-for="(movie, i) in movies" :key="i" cols="12" md="4">
-      <v-card class="mx-auto" max-width="380">
-        <v-img :src="movie.image" height="200px" cover></v-img>
-        <v-card-title class="title">{{ movie.title }}</v-card-title>
-        <v-card-subtitle class="subtitle">{{ movie.subtitle }}</v-card-subtitle>
+    <v-row dense>
+      <v-col v-for="(movie, i) in movies" :key="i" cols="12" md="4">
+        <v-card class="mx-auto" max-width="380">
+          <v-img :src="movie.image" height="200px" cover></v-img>
+          <v-card-title class="title">{{ movie.title }}</v-card-title>
+          <v-card-subtitle class="subtitle">{{
+            movie.subtitle
+          }}</v-card-subtitle>
+          <v-card-actions>
+            <v-btn color="red" text>Explore</v-btn>
+            <v-spacer></v-spacer>
+            <v-btn text @click="openCommentDialog(movie)">Add a Comment</v-btn>
+            <v-btn
+              icon
+              :color="movie.favorited ? 'red' : 'grey'"
+              @click="toggleFavorite(movie)"
+            >
+              <v-icon>{{
+                movie.favorited ? "mdi-heart" : "mdi-heart-outline"
+              }}</v-icon>
+            </v-btn>
+            <v-btn
+              class="chevron-btn"
+              :icon="movie.show ? 'mdi-chevron-up' : 'mdi-chevron-down'"
+              @click="movie.show = !movie.show"
+            ></v-btn>
+          </v-card-actions>
+          <v-expand-transition>
+            <div v-show="movie.show">
+              <v-divider></v-divider>
+              <v-card-text>{{ movie.description }}</v-card-text>
+            </div>
+          </v-expand-transition>
+        </v-card>
+      </v-col>
+    </v-row>
+
+    <v-dialog v-model="dialog" max-width="800px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">Comments for {{ selectedMovie?.title }}</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col cols="12">
+                <v-textarea
+                  v-model="newComment"
+                  label="Add your comment"
+                  rows="4"
+                  auto-grow
+                ></v-textarea>
+              </v-col>
+              <v-col cols="12">
+                <v-btn color="#a52a2a" text @click="addComment"> Submit </v-btn>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col
+                cols="12"
+                v-for="(comment, index) in comments"
+                :key="index"
+              >
+                <v-card class="mb-2">
+                  <v-card-text>{{ comment }}</v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
         <v-card-actions>
-          <v-btn color="red" text>Explore</v-btn>
           <v-spacer></v-spacer>
-          <v-btn text @click="addComment(movie)">Add a Comment</v-btn>
-          <v-btn
-            icon
-            :color="movie.favorited ? 'red' : 'grey'"
-            @click="toggleFavorite(movie)"
-          >
-            <v-icon>{{
-              movie.favorited ? "mdi-heart" : "mdi-heart-outline"
-            }}</v-icon>
+          <v-btn color="red darken-1" text @click="closeCommentDialog">
+            Close
           </v-btn>
-          <v-btn
-            class="chevron-btn"
-            :icon="movie.show ? 'mdi-chevron-up' : 'mdi-chevron-down'"
-            @click="movie.show = !movie.show"
-          ></v-btn>
         </v-card-actions>
-        <v-expand-transition>
-          <div v-show="movie.show">
-            <v-divider></v-divider>
-            <v-card-text>{{ movie.description }}</v-card-text>
-          </div>
-        </v-expand-transition>
       </v-card>
-    </v-col>
-  </v-row>
+    </v-dialog>
+  </div>
 </template>
 
 <script>
@@ -42,6 +88,10 @@ export default {
   data() {
     return {
       movies: [],
+      dialog: false,
+      selectedMovie: null,
+      newComment: "",
+      comments: [],
     };
   },
   created() {
@@ -60,8 +110,20 @@ export default {
         console.error("Error fetching movies:", error);
       }
     },
-    addComment(movie) {
-      // Logic to add comment
+    openCommentDialog(movie) {
+      this.selectedMovie = movie;
+      this.dialog = true;
+    },
+    closeCommentDialog() {
+      this.dialog = false;
+      this.selectedMovie = null;
+      this.newComment = "";
+    },
+    addComment() {
+      if (this.newComment.trim() !== "") {
+        this.comments.push(this.newComment);
+        this.newComment = "";
+      }
     },
     toggleFavorite(movie) {
       movie.favorited = !movie.favorited;
@@ -103,5 +165,10 @@ h1 {
 
 .subtitle {
   min-height: 40px;
+}
+
+.headline {
+  font-size: 24px;
+  font-weight: bold;
 }
 </style>
