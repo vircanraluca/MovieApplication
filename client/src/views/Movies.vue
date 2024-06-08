@@ -5,12 +5,12 @@
     <v-col v-for="(movie, i) in movies" :key="i" cols="12" md="4">
       <v-card class="mx-auto" max-width="380">
         <v-img :src="movie.image" height="200px" cover></v-img>
-        <v-card-title>{{ movie.title }}</v-card-title>
-        <v-card-subtitle>{{ movie.subtitle }}</v-card-subtitle>
+        <v-card-title class="title">{{ movie.title }}</v-card-title>
+        <v-card-subtitle class="subtitle">{{ movie.subtitle }}</v-card-subtitle>
         <v-card-actions>
           <v-btn color="red" text>Explore</v-btn>
           <v-spacer></v-spacer>
-          <v-btn text @click="addComment(movie)"> Add a Comment </v-btn>
+          <v-btn text @click="addComment(movie)">Add a Comment</v-btn>
           <v-btn
             icon
             :color="movie.favorited ? 'red' : 'grey'"
@@ -86,5 +86,22 @@ h1 {
 
 .chevron-btn {
   margin-right: 8px;
+}
+
+.v-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.v-card-title,
+.v-card-subtitle {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.subtitle {
+  min-height: 40px;
 }
 </style>
