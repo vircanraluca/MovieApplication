@@ -87,6 +87,73 @@ app.get("/movies", async (req, res) => {
   }
 });
 
+app.get("/movies/:id", async (req, res) => {
+  try {
+    const movieId = req.params.id;
+    const movieRef = db.collection("movies").doc(movieId);
+    const doc = await movieRef.get();
+    if (!doc.exists) {
+      res.status(404).json({ message: "Movie not found" });
+    } else {
+      res.status(200).json(doc.data());
+    }
+  } catch (error) {
+    console.error("Error fetching movie details:", error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while fetching movie details." });
+  }
+});
+
+app.get("/comments/:movieId", async (req, res) => {
+  try {
+    const movieId = req.params.movieId;
+    console.log(`Fetching comments for movie ID: ${movieId}`);
+
+    const commentsSnapshot = await db
+      .collection("comments")
+      .where("movieId", "==", movieId)
+      .get();
+    if (commentsSnapshot.empty) {
+      return res.status(404).json({ error: "No comments found" });
+    }
+
+    const comments = [];
+    commentsSnapshot.forEach((doc) => {
+      comments.push(doc.data());
+    });
+
+    res.status(200).json(comments);
+  } catch (error) {
+    console.error("Error fetching comments:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+app.post("/comments/:movieId", async (req, res) => {
+  try {
+    const movieId = req.params.movieId;
+    console.log(`Received POST request for movie ID: ${movieId}`); // Log the movie ID
+
+    const { user, text } = req.body;
+
+    if (!user || !text) {
+      return res.status(400).json({ error: "Bad Request: Missing fields" });
+    }
+
+    await db.collection("comments").add({
+      user,
+      text,
+      movieId,
+      timestamp: new Date().toISOString(),
+    });
+    res.status(200).json({ message: "Comment added successfully" });
+  } catch (error) {
+    console.error("Error adding comment:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 app.get("/", (req, res) => {
   res.send("Server is up and running");
 });
