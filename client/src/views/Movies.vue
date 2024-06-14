@@ -14,7 +14,6 @@
               >View Comments</v-btn
             >
             <v-spacer></v-spacer>
-
             <v-btn
               icon
               :color="movie.favorited ? 'red' : 'grey'"
@@ -47,6 +46,7 @@ export default {
   data() {
     return {
       movies: [],
+      userId: "user123", // Exemplu de ID de utilizator; poate fi din autentificare
     };
   },
   created() {
@@ -68,9 +68,26 @@ export default {
     goToCommentsPage(movieId) {
       this.$router.push({ name: "Comments", params: { id: movieId } });
     },
-    toggleFavorite(movie) {
+    async toggleFavorite(movie) {
       movie.favorited = !movie.favorited;
-      // Logic to update favorite status in the backend if necessary
+      try {
+        const response = await fetch("http://localhost:4000/favorites", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: this.userId,
+            movieId: movie.id,
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to update favorite status");
+        }
+      } catch (error) {
+        console.error("Error updating favorite status:", error);
+      }
     },
   },
 };
