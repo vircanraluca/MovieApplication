@@ -154,6 +154,63 @@ app.post("/comments/:movieId", async (req, res) => {
   }
 });
 
+app.post("/favorites", async (req, res) => {
+  try {
+    const { userId, movieId } = req.body;
+
+    if (!userId || !movieId) {
+      return res.status(400).json({ error: "Bad Request: Missing fields" });
+    }
+
+    const favoriteRef = db.collection("favorites").doc(`${userId}_${movieId}`);
+    await favoriteRef.set({
+      userId,
+      movieId,
+      timestamp: new Date().toISOString(),
+    });
+
+    res.status(200).json({ message: "Movie added to favorites successfully" });
+  } catch (error) {
+    console.error("Error adding to favorites:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+app.get("/favorites/:userId", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const favoritesSnapshot = await db
+      .collection("favorites")
+      .where("userId", "==", userId)
+      .get();
+
+    if (favoritesSnapshot.empty) {
+      return res.status(404).json({ message: "No favorites found" });
+    }
+
+    const favoriteMovies = [];
+    const moviePromises = [];
+
+    favoritesSnapshot.forEach((doc) => {
+      const movieId = doc.data().movieId;
+      moviePromises.push(db.collection("movies").doc(movieId).get());
+    });
+
+    const movieDocs = await Promise.all(moviePromises);
+
+    movieDocs.forEach((doc) => {
+      if (doc.exists) {
+        favoriteMovies.push({ id: doc.id, ...doc.data() });
+      }
+    });
+
+    res.status(200).json(favoriteMovies);
+  } catch (error) {
+    console.error("Error fetching favorite movies:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 app.get("/", (req, res) => {
   res.send("Server is up and running");
 });
