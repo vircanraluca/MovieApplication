@@ -45,20 +45,29 @@
 </template>
 
 <script>
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+
 export default {
   props: ["id"],
   data() {
     return {
       newComment: "",
       comments: [],
+      currentUser: null, // Adaugă un câmp pentru utilizatorul curent
     };
   },
   methods: {
     async addComment() {
       if (this.newComment.trim() !== "") {
         try {
+          const currentUser = this.currentUser;
+          if (!currentUser) {
+            throw new Error("User not authenticated");
+          }
+
+          const idToken = await currentUser.getIdToken();
           const comment = {
-            user: "Anonymous",
+            user: currentUser.displayName || currentUser.email,
             text: this.newComment,
           };
           console.log("Movie ID:", this.id); // Debugging line to check movie ID
@@ -68,6 +77,7 @@ export default {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
+                Authorization: `Bearer ${idToken}`,
               },
               body: JSON.stringify(comment),
             }
@@ -103,6 +113,16 @@ export default {
   },
   created() {
     this.fetchComments();
+
+    // Ascultă schimbările de autentificare pentru a obține utilizatorul curent
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        this.currentUser = user;
+      } else {
+        this.currentUser = null;
+      }
+    });
   },
 };
 </script>
