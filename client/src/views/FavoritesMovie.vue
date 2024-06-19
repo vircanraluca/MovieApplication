@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Favorite Movies</h1>
+    <h1>View Your Favorite Movies</h1>
     <v-row dense>
       <v-col v-for="(movie, i) in favoriteMovies" :key="i" cols="12" md="4">
         <v-card class="mx-auto" max-width="380">
