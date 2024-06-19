@@ -33,8 +33,25 @@
             </thead>
             <tbody>
               <tr v-for="(comment, index) in comments" :key="index">
-                <td>{{ comment.email }}</td>
-                <td>{{ comment.comment }}</td>
+                <td>{{ comment.user }}</td>
+                <td>{{ comment.text }}</td>
+
+                <td>
+                  <v-btn
+                    v-if="comment.user === currentUser.email"
+                    color="red"
+                    class="ml-2"
+                  >
+                    Delete
+                  </v-btn>
+                  <v-btn
+                    v-if="comment.user === currentUser.email"
+                    color="blue"
+                    class="ml-2"
+                  >
+                    Edit
+                  </v-btn>
+                </td>
               </tr>
             </tbody>
           </v-table>
@@ -43,7 +60,6 @@
     </v-container>
   </div>
 </template>
-
 <script>
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
