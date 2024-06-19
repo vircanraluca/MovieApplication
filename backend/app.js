@@ -1,13 +1,11 @@
-const {
-  initializeApp,
-  applicationDefault,
-  cert,
-} = require("firebase-admin/app");
-const {
-  getFirestore,
-  Timestamp,
-  FieldValue,
-} = require("firebase-admin/firestore");
+const express = require("express");
+const app = express();
+const logger = require("morgan");
+const cors = require("cors");
+const port = 4000;
+
+const { initializeApp, cert } = require("firebase-admin/app");
+const { getFirestore } = require("firebase-admin/firestore");
 
 const serviceAccount = require("./db/movieapp-a7969-firebase-adminsdk-9svx8-28f6a5d42f.json");
 
@@ -17,14 +15,25 @@ initializeApp({
 
 const db = getFirestore();
 
-//server app => express
-const express = require("express");
-const app = express();
-const logger = require("morgan");
-const cors = require("cors");
-const port = 4000;
+// Middleware pentru autentificare
+const verifyToken = (req, res, next) => {
+  const token =
+    req.body.token || req.query.token || req.headers["x-access-token"];
 
-const fs = require("fs");
+  if (!token) {
+    return res.status(403).send("A token is required for authentication");
+  }
+
+  auth
+    .verifyIdToken(token)
+    .then((decodedToken) => {
+      req.user = decodedToken;
+      next();
+    })
+    .catch((error) => {
+      return res.status(403).send("Forbidden: Invalid token");
+    });
+};
 
 app.use(logger("dev"));
 app.use(cors());
@@ -33,9 +42,8 @@ app.use(express.json());
 
 app.post("/register", async (req, res) => {
   try {
-    console.log("Received registration request:", req.body); // Log request body
+    console.log("Received registration request:", req.body);
     const { email, password } = req.body;
-    // Logică pentru a salva utilizatorul în Firestore (dacă este necesar)
     res
       .status(200)
       .json({ message: "User registered successfully on the server." });
@@ -130,10 +138,11 @@ app.get("/comments/:movieId", async (req, res) => {
   }
 });
 
-app.post("/comments/:movieId", async (req, res) => {
+// Aplică verifyToken pentru rutele care necesită autentificare
+app.post("/comments/:movieId", verifyToken, async (req, res) => {
   try {
     const movieId = req.params.movieId;
-    console.log(`Received POST request for movie ID: ${movieId}`); // Log the movie ID
+    console.log(`Received POST request for movie ID: ${movieId}`);
 
     const { user, text } = req.body;
 
@@ -154,7 +163,7 @@ app.post("/comments/:movieId", async (req, res) => {
   }
 });
 
-app.post("/favorites", async (req, res) => {
+app.post("/favorites", verifyToken, async (req, res) => {
   try {
     const { userId, movieId } = req.body;
 
@@ -176,7 +185,7 @@ app.post("/favorites", async (req, res) => {
   }
 });
 
-app.get("/favorites/:userId", async (req, res) => {
+app.get("/favorites/:userId", verifyToken, async (req, res) => {
   try {
     const userId = req.params.userId;
     const favoritesSnapshot = await db
