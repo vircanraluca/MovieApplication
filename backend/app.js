@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const logger = require("morgan");
 const cors = require("cors");
+
 const port = 4000;
 
 const { initializeApp, cert } = require("firebase-admin/app");
@@ -15,30 +16,11 @@ initializeApp({
 
 const db = getFirestore();
 
-// Middleware pentru autentificare
-const verifyToken = (req, res, next) => {
-  const token =
-    req.body.token || req.query.token || req.headers["x-access-token"];
-
-  if (!token) {
-    return res.status(403).send("A token is required for authentication");
-  }
-
-  auth
-    .verifyIdToken(token)
-    .then((decodedToken) => {
-      req.user = decodedToken;
-      next();
-    })
-    .catch((error) => {
-      return res.status(403).send("Forbidden: Invalid token");
-    });
-};
-
 app.use(logger("dev"));
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+const fs = require("fs");
 
 app.post("/register", async (req, res) => {
   try {
@@ -139,7 +121,7 @@ app.get("/comments/:movieId", async (req, res) => {
 });
 
 // Aplică verifyToken pentru rutele care necesită autentificare
-app.post("/comments/:movieId", verifyToken, async (req, res) => {
+app.post("/comments/:movieId", async (req, res) => {
   try {
     const movieId = req.params.movieId;
     console.log(`Received POST request for movie ID: ${movieId}`);
@@ -163,7 +145,7 @@ app.post("/comments/:movieId", verifyToken, async (req, res) => {
   }
 });
 
-app.post("/favorites", verifyToken, async (req, res) => {
+app.post("/favorites", async (req, res) => {
   try {
     const { userId, movieId } = req.body;
 
@@ -185,7 +167,7 @@ app.post("/favorites", verifyToken, async (req, res) => {
   }
 });
 
-app.get("/favorites/:userId", verifyToken, async (req, res) => {
+app.get("/favorites/:userId", async (req, res) => {
   try {
     const userId = req.params.userId;
     const favoritesSnapshot = await db
