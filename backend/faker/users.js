@@ -5,17 +5,15 @@ async function generateUsers() {
   try {
     for (let i = 1; i <= 100; i++) {
       const email = faker.internet.email();
-      const password = faker.internet.password(); // Generăm o parolă aleatorie
+      const password = faker.internet.password();
 
       const userJson = {
         email: email,
         password: password,
       };
 
-      // Simulăm adăugarea utilizatorului în Firestore
       console.log(`Adding user with email: ${email}`);
 
-      // Într-o implementare reală, folosești db.collection('users').doc(email).set(userJson);
       db.collection("users").doc(email).set(userJson);
     }
 
