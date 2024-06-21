@@ -29,23 +29,25 @@
               <tr>
                 <th class="text-left">Email</th>
                 <th class="text-left">Comment</th>
+                <th class="text-left">Actions</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(comment, index) in comments" :key="index">
                 <td>{{ comment.user }}</td>
                 <td>{{ comment.text }}</td>
-
                 <td>
                   <v-btn
-                    v-if="comment.user === currentUser.email"
+                    v-if="currentUser && comment.user === currentUser.email"
                     color="red"
                     class="ml-2"
+                    @click="deleteComment(comment.id)"
                   >
                     Delete
                   </v-btn>
+
                   <v-btn
-                    v-if="comment.user === currentUser.email"
+                    v-if="currentUser && comment.user === currentUser.email"
                     color="blue"
                     class="ml-2"
                   >
@@ -60,6 +62,7 @@
     </v-container>
   </div>
 </template>
+
 <script>
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
@@ -69,7 +72,7 @@ export default {
     return {
       newComment: "",
       comments: [],
-      currentUser: null, // Adaugă un câmp pentru utilizatorul curent
+      currentUser: null,
     };
   },
   methods: {
@@ -83,10 +86,10 @@ export default {
 
           const idToken = await currentUser.getIdToken();
           const comment = {
-            user: currentUser.displayName || currentUser.email,
+            user: currentUser.email,
             text: this.newComment,
+            movieId: this.id, // Adaugă și movieId dacă este necesar
           };
-          console.log("Movie ID:", this.id); // Debugging line to check movie ID
           const response = await fetch(
             `http://localhost:4000/comments/${this.id}`,
             {
@@ -100,7 +103,8 @@ export default {
           );
 
           if (response.ok) {
-            this.comments.push(comment);
+            const newComment = await response.json(); // Presupunând că backend-ul returnează comentariul nou cu ID-ul său
+            this.comments.push({ id: newComment.id, ...newComment });
             this.newComment = "";
           } else {
             const errorText = await response.text();
@@ -117,13 +121,46 @@ export default {
           `http://localhost:4000/comments/${this.id}`
         );
         if (response.ok) {
-          this.comments = await response.json();
+          const commentsData = await response.json();
+          // Map the comments to include the Firebase ID
+          this.comments = Object.keys(commentsData).map((key) => {
+            return { id: key, ...commentsData[key] };
+          });
         } else {
           const errorText = await response.text();
           console.error("Error fetching comments:", errorText);
         }
       } catch (error) {
         console.error("Error fetching comments:", error);
+      }
+    },
+    async deleteComment(commentId) {
+      if (!commentId) {
+        console.error("Invalid comment ID");
+        return;
+      }
+      console.log("Attempting to delete comment with ID:", commentId); // Log pentru debug
+      try {
+        const response = await fetch(
+          `http://localhost:4000/comments/${commentId}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (response.ok) {
+          this.comments = this.comments.filter(
+            (comment) => comment.id !== commentId
+          );
+          console.log("Comment deleted successfully.");
+        } else {
+          console.error("Error deleting comment:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error deleting comment:", error);
       }
     },
   },

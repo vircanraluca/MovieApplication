@@ -145,6 +145,18 @@ app.post("/comments/:movieId", async (req, res) => {
   }
 });
 
+app.delete("/comments/:commentId", async (req, res) => {
+  try {
+    const commentId = req.params.commentId;
+    console.log(`Deleting comment with ID: ${commentId}`);
+    await db.collection("comments").doc(commentId).delete();
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error deleting comment:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 app.post("/favorites", async (req, res) => {
   try {
     const { userId, movieId } = req.body;
