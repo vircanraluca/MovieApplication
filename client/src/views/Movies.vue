@@ -10,17 +10,17 @@
             movie.subtitle
           }}</v-card-subtitle>
           <v-card-actions>
-            <v-btn color="red" text @click="goToCommentsPage(movie.id)"
-              >View Comments</v-btn
-            >
+            <v-btn color="red" text @click="goToCommentsPage(movie.id)">
+              View Comments
+            </v-btn>
             <v-spacer></v-spacer>
             <v-btn
               icon
-              :color="movie.favorited ? 'red' : 'grey'"
+              :color="movie.isFavorite ? 'red' : 'grey'"
               @click="toggleFavorite(movie)"
             >
               <v-icon>{{
-                movie.favorited ? "mdi-heart" : "mdi-heart-outline"
+                movie.isFavorite ? "mdi-heart" : "mdi-heart-outline"
               }}</v-icon>
             </v-btn>
             <v-btn
@@ -60,6 +60,12 @@ export default {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
+
+        // Set initial state for isFavorite
+        for (const movie of data) {
+          movie.isFavorite = movie.isFavorite || false; // Assume isFavorite is false if not defined
+        }
+
         this.movies = data;
       } catch (error) {
         console.error("Error fetching movies:", error);
@@ -69,7 +75,7 @@ export default {
       this.$router.push({ name: "Comments", params: { id: movieId } });
     },
     async toggleFavorite(movie) {
-      movie.favorited = !movie.favorited;
+      movie.isFavorite = !movie.isFavorite;
       try {
         const response = await fetch("http://localhost:4000/favorites", {
           method: "POST",
@@ -79,6 +85,7 @@ export default {
           body: JSON.stringify({
             userId: this.userId,
             movieId: movie.id,
+            isFavorite: movie.isFavorite,
           }),
         });
 

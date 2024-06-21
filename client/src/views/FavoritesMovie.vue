@@ -16,11 +16,11 @@
             <v-spacer></v-spacer>
             <v-btn
               icon
-              :color="movie.favorited ? 'red' : 'grey'"
+              :color="movie.isFavorite ? 'red' : 'grey'"
               @click="toggleFavorite(movie)"
             >
               <v-icon>{{
-                movie.favorited ? "mdi-heart" : "mdi-heart-outline"
+                movie.isFavorite ? "mdi-heart" : "mdi-heart-outline"
               }}</v-icon>
             </v-btn>
             <v-btn
@@ -62,10 +62,11 @@ export default {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        // Initialize show property for each movie
+        // Initialize show property for each movie and set isFavorite
         this.favoriteMovies = data.map((movie) => ({
           ...movie,
           show: false, // Initialize show property to false
+          isFavorite: movie.isFavorite || false, // Assume isFavorite is false if not defined
         }));
       } catch (error) {
         console.error("Error fetching favorite movies:", error);
@@ -75,18 +76,20 @@ export default {
       this.$router.push({ name: "Comments", params: { id: movieId } });
     },
     async toggleFavorite(movie) {
-      movie.favorited = !movie.favorited;
+      movie.isFavorite = !movie.isFavorite;
       try {
-        const response = await fetch("http://localhost:4000/favorites", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: this.userId,
-            movieId: movie.id,
-          }),
-        });
+        const response = await fetch(
+          `http://localhost:4000/movies/${movie.id}`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              isFavorite: movie.isFavorite,
+            }),
+          }
+        );
 
         if (!response.ok) {
           throw new Error("Failed to update favorite status");
