@@ -42,22 +42,39 @@
 </template>
 
 <script>
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+
 export default {
   data() {
     return {
       favoriteMovies: [],
-      userId: "user123", // Exemplu de ID de utilizator; poate fi din autentificare
+      currentUser: null,
     };
   },
   created() {
-    this.fetchFavoriteMovies();
+    this.checkUserAuthentication();
   },
   methods: {
     async fetchFavoriteMovies() {
       try {
+        const currentUser = this.currentUser;
+        if (!currentUser) {
+          console.error("User is not authenticated");
+          return;
+        }
+
+        const idToken = await currentUser.getIdToken();
+        const userId = currentUser.uid;
         const response = await fetch(
-          `http://localhost:4000/favorites/${this.userId}`
+          `http://localhost:4000/favorites/${userId}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${idToken}`,
+            },
+          }
         );
+
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
@@ -71,6 +88,18 @@ export default {
       } catch (error) {
         console.error("Error fetching favorite movies:", error);
       }
+    },
+    checkUserAuthentication() {
+      const auth = getAuth();
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          this.currentUser = user;
+          this.fetchFavoriteMovies();
+        } else {
+          this.currentUser = null;
+          this.$router.push({ name: "Login" });
+        }
+      });
     },
     goToCommentsPage(movieId) {
       this.$router.push({ name: "Comments", params: { id: movieId } });

@@ -159,9 +159,17 @@ app.delete("/comments/:commentId", async (req, res) => {
 
 app.post("/favorites", async (req, res) => {
   try {
-    const { userId, movieId } = req.body;
+    const { movieId, isFavorite } = req.body;
+    const idToken = req.headers.authorization?.split("Bearer ")[1];
 
-    if (!userId || !movieId) {
+    if (!idToken) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    const userId = decodedToken.uid;
+
+    if (!movieId) {
       return res.status(400).json({ error: "Bad Request: Missing fields" });
     }
 
@@ -169,6 +177,7 @@ app.post("/favorites", async (req, res) => {
     await favoriteRef.set({
       userId,
       movieId,
+      isFavorite,
       timestamp: new Date().toISOString(),
     });
 
@@ -181,7 +190,19 @@ app.post("/favorites", async (req, res) => {
 
 app.get("/favorites/:userId", async (req, res) => {
   try {
-    const userId = req.params.userId;
+    const { userId } = req.params;
+    const idToken = req.headers.authorization?.split("Bearer ")[1];
+
+    if (!idToken) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+
+    if (decodedToken.uid !== userId) {
+      return res.status(403).json({ error: "Forbidden: Access denied" });
+    }
+
     const favoritesSnapshot = await db
       .collection("favorites")
       .where("userId", "==", userId)
