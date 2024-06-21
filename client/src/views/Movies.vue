@@ -101,6 +101,12 @@ export default {
         console.error("Error updating favorite status:", error);
       }
     },
+    goToCommentsPage(movieId) {
+      this.$router.push({ name: "Comments", params: { id: movieId } });
+    },
+    toggleShowDescription(movie) {
+      movie.show = !movie.show;
+    },
   },
   created() {
     this.fetchMovies();
