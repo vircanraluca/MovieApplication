@@ -43,7 +43,6 @@
 
 <script>
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-
 export default {
   data() {
     return {
@@ -62,7 +61,6 @@ export default {
           console.error("User is not authenticated");
           return;
         }
-
         const idToken = await currentUser.getIdToken();
         const userId = currentUser.uid;
         const response = await fetch(
@@ -74,7 +72,6 @@ export default {
             },
           }
         );
-
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
@@ -119,7 +116,6 @@ export default {
             }),
           }
         );
-
         if (!response.ok) {
           throw new Error("Failed to update favorite status");
         }
@@ -134,41 +130,34 @@ export default {
   },
 };
 </script>
-
 <style scoped>
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 30px;
 }
-
 h1 {
   margin-top: 20px;
   margin-bottom: 50px;
   margin-left: 20px;
 }
-
 .chevron-btn {
   margin-right: 8px;
 }
-
 .v-card {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
-
 .v-card-title,
 .v-card-subtitle {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
 .subtitle {
   min-height: 40px;
 }
-
 .headline {
   font-size: 24px;
   font-weight: bold;

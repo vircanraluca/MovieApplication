@@ -43,7 +43,6 @@
 
 <script>
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-
 export default {
   data() {
     return {
@@ -59,12 +58,10 @@ export default {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-
         // Set initial state for isFavorite
         for (const movie of data) {
           movie.isFavorite = movie.isFavorite || false; // Assume isFavorite is false if not defined
         }
-
         this.movies = data;
       } catch (error) {
         console.error("Error fetching movies:", error);
@@ -76,10 +73,8 @@ export default {
         console.error("User is not authenticated");
         return;
       }
-
       const idToken = await currentUser.getIdToken();
       movie.isFavorite = !movie.isFavorite;
-
       try {
         const response = await fetch("http://localhost:4000/favorites", {
           method: "POST",
@@ -93,7 +88,6 @@ export default {
             isFavorite: movie.isFavorite,
           }),
         });
-
         if (!response.ok) {
           throw new Error("Failed to update favorite status");
         }
@@ -101,16 +95,9 @@ export default {
         console.error("Error updating favorite status:", error);
       }
     },
-    goToCommentsPage(movieId) {
-      this.$router.push({ name: "Comments", params: { id: movieId } });
-    },
-    toggleShowDescription(movie) {
-      movie.show = !movie.show;
-    },
   },
   created() {
     this.fetchMovies();
-
     // Ascultă schimbările de autentificare pentru a obține utilizatorul curent
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
@@ -126,34 +113,28 @@ export default {
   margin-right: auto;
   margin-bottom: 30px;
 }
-
 h1 {
   margin-top: 20px;
   margin-bottom: 50px;
   margin-left: 20px;
 }
-
 .chevron-btn {
   margin-right: 8px;
 }
-
 .v-card {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
-
 .v-card-title,
 .v-card-subtitle {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
 .subtitle {
   min-height: 40px;
 }
-
 .headline {
   font-size: 24px;
   font-weight: bold;

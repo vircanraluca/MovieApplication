@@ -8,6 +8,7 @@ const port = 4000;
 const { initializeApp, cert } = require("firebase-admin/app");
 const { getFirestore } = require("firebase-admin/firestore");
 
+const admin = require("firebase-admin");
 const serviceAccount = require("./db/movieapp-a7969-firebase-adminsdk-9svx8-28f6a5d42f.json");
 
 initializeApp({
@@ -207,27 +208,21 @@ app.get("/favorites/:userId", async (req, res) => {
       .collection("favorites")
       .where("userId", "==", userId)
       .get();
-
     if (favoritesSnapshot.empty) {
       return res.status(404).json({ message: "No favorites found" });
     }
-
     const favoriteMovies = [];
     const moviePromises = [];
-
     favoritesSnapshot.forEach((doc) => {
       const movieId = doc.data().movieId;
       moviePromises.push(db.collection("movies").doc(movieId).get());
     });
-
     const movieDocs = await Promise.all(moviePromises);
-
     movieDocs.forEach((doc) => {
       if (doc.exists) {
         favoriteMovies.push({ id: doc.id, ...doc.data() });
       }
     });
-
     res.status(200).json(favoriteMovies);
   } catch (error) {
     console.error("Error fetching favorite movies:", error);
