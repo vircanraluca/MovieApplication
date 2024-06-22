@@ -12,16 +12,6 @@
           ></v-textarea>
           <v-btn color="#a52a2a" @click="addComment">Submit</v-btn>
         </v-col>
-        <v-col cols="12" v-if="comments.length">
-          <h2>Your Comments</h2>
-          <v-card
-            v-for="(comment, index) in comments"
-            :key="index"
-            class="mb-2"
-          >
-            <v-card-text>{{ comment.text }}</v-card-text>
-          </v-card>
-        </v-col>
         <!-- Tabelul adăugat mai jos -->
         <v-col cols="12">
           <v-table>

@@ -67,6 +67,9 @@ export default {
         console.error("Error fetching movies:", error);
       }
     },
+    goToCommentsPage(movieId) {
+      this.$router.push({ name: "Comments", params: { id: movieId } });
+    },
     async toggleFavorite(movie) {
       const currentUser = this.currentUser;
       if (!currentUser) {
@@ -95,6 +98,9 @@ export default {
         console.error("Error updating favorite status:", error);
       }
     },
+  },
+  goToCommentsPage(movieId) {
+    this.$router.push({ name: "Comments", params: { id: movieId } });
   },
   created() {
     this.fetchMovies();
