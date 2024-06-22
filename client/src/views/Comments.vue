@@ -40,6 +40,7 @@
                     v-if="currentUser && comment.user === currentUser.email"
                     color="blue"
                     class="ml-2"
+                    @click="openEditDialog(comment)"
                   >
                     Edit
                   </v-btn>
@@ -50,6 +51,27 @@
         </v-col>
       </v-row>
     </v-container>
+
+    <v-dialog v-model="editDialog" persistent max-width="600px">
+      <v-card>
+        <v-card-title class="headline">Edit Comment</v-card-title>
+        <v-card-text>
+          <v-textarea
+            v-model="editedComment"
+            label="Edit your comment"
+            rows="4"
+            auto-grow
+          ></v-textarea>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="editDialog = false"
+            >Cancel</v-btn
+          >
+          <v-btn color="blue darken-1" text @click="updateComment">Save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -63,6 +85,9 @@ export default {
       newComment: "",
       comments: [],
       currentUser: null,
+      editDialog: false,
+      editedComment: "",
+      currentCommentId: null,
     };
   },
   methods: {
@@ -78,7 +103,7 @@ export default {
           const comment = {
             user: currentUser.email,
             text: this.newComment,
-            movieId: this.id, // Adaugă și movieId dacă este necesar
+            movieId: this.id,
           };
           const response = await fetch(
             `http://localhost:4000/comments/${this.id}`,
@@ -93,7 +118,7 @@ export default {
           );
 
           if (response.ok) {
-            const newComment = await response.json(); // Presupunând că backend-ul returnează comentariul nou cu ID-ul său
+            const newComment = await response.json();
             this.comments.push({ id: newComment.id, ...newComment });
             this.newComment = "";
           } else {
@@ -112,7 +137,6 @@ export default {
         );
         if (response.ok) {
           const commentsData = await response.json();
-          // Map the comments to include the Firebase ID
           this.comments = Object.keys(commentsData).map((key) => {
             return { id: key, ...commentsData[key] };
           });
@@ -153,11 +177,54 @@ export default {
         console.error("Error deleting comment:", error);
       }
     },
+
+    openEditDialog(comment) {
+      this.editedComment = comment.text;
+      this.currentCommentId = comment.id;
+      this.editDialog = true;
+    },
+    async updateComment() {
+      if (!this.currentCommentId) {
+        console.error("Invalid comment ID");
+        return;
+      }
+      try {
+        const response = await fetch(
+          `http://localhost:4000/comments/${this.currentCommentId}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ text: this.editedComment }),
+          }
+        );
+
+        if (response.ok) {
+          const updatedComment = await response.json();
+          const index = this.comments.findIndex(
+            (comment) => comment.id === this.currentCommentId
+          );
+          if (index !== -1) {
+            this.comments.splice(index, 1, {
+              ...updatedComment,
+              id: this.currentCommentId,
+            });
+          }
+          this.editDialog = false;
+          this.editedComment = "";
+          this.currentCommentId = null;
+        } else {
+          console.error("Error updating comment:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error updating comment:", error);
+      }
+    },
   },
   created() {
     this.fetchComments();
 
-    // Ascultă schimbările de autentificare pentru a obține utilizatorul curent
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
       if (user) {
