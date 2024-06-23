@@ -30,10 +30,6 @@ const routes = [
     component: () => import("@/views/FavoritesMovie.vue"),
   },
   {
-    path: "/about",
-    component: () => import("@/views/AboutPage.vue"),
-  },
-  {
     path: "/comments/:id",
     name: "Comments",
     component: () => import("@/views/Comments.vue"), // Adjust the path as needed

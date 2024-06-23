@@ -1,118 +1,310 @@
 <template>
   <v-app>
-    <v-container class="dashboard-container">
-      <v-row>
-        <v-col cols="12" class="text-center">
-          <h1 class="mb-5">WELCOME TO MOVIEREV</h1>
-        </v-col>
-      </v-row>
+    <div class="section1">
+      <div class="apply">
 
-      <v-row>
-        <v-col cols="8" style="margin-top: 80px">
-          <h1>MovieRev</h1>
-          <p class="subheading font-weight">
-            Dive into the fascinating world of cinema with us. Explore and
-            review thousands of movies across all genres, from timeless classics
-            to the latest blockbusters. Share your thoughts and rate movies to
-            help others discover their next favorite film. Join our passionate
-            community of movie enthusiasts and contribute to a growing
-            collection of reviews and recommendations.
-          </p>
+        <h2> All the latest movies, series and shows</h2>
 
-          <v-btn color="#a52a2a" class="v-btn--large mt-2"
-            >Explore Movies</v-btn
-          >
-        </v-col>
+        <h3>
+          Join our passionate
+          community of movie enthusiasts and contribute to a growing collection
+          of reviews and recommendations.
+        </h3>
+        <div class="button-container">
+          <v-btn color="#a52a2a" class="v-btn--large center-button mt-2">
+            Explore Movies
+          </v-btn>
+        </div>
+      </div>
+    </div>
 
-        <v-col cols="4">
-          <v-img
-            src="../assets/movie_dashboard.png"
-            alt="MovieRev Image"
-            class="mx-auto"
-          />
-        </v-col>
-      </v-row>
+    <div class="section2">
+      <div>
+        <h1>View The Most Popular Movies</h1>
+      </div>
+      <div class="imgs">
+        <img
+          src="https://m.media-amazon.com/images/M/MV5BNTEzMzBiNGYtYThiZS00MzBjLTk5ZWItM2FmMzU3Y2RjYTVlXkEyXkFqcGdeQXVyMjkwOTAyMDU@._V1_FMjpg_UX1000_.jpg" />
+        <img
+          src="https://pyxis.nymag.com/v1/imgs/e7c/1ce/29ba7ab00372a87239627261f7ba8acc70-17-true-detective.2x.h473.w710.jpg" />
+        <img
+          src="https://ew.com/thmb/Jua28XPVRQyx3FOJh1BH46TOBuc=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/true-detective-s1_1-2000-b73d8c089ab64387b2ae805dd4168dde.jpg" />
 
-      <v-row>
-        <v-col cols="12">
-          <v-divider></v-divider>
-        </v-col>
-      </v-row>
-    </v-container>
+        <img
+          src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCeJOO-9FXPGvMalP96svQOvvjwBjplyIs0g&usqp=CAU" />
+      </div>
+    </div>
 
-    <v-row justify="center">
-      <v-col cols="12" md="8">
-        <h2 class="text-center mb-5" style="color: #a52a2a; font-size: 2.5rem">
-          About Us
-        </h2>
-        <v-stepper :items="['Discover', 'Review', 'Connect']" color="primary">
-          <template v-slot:item.1>
-            <v-card title="Discover" flat>
-              <v-card-text>
-                At MovieRev, we believe that the joy of cinema lies in
-                exploration. Our platform offers a vast collection of movies
-                spanning various genres and eras. Use our advanced search and
-                filtering options to discover hidden gems, blockbuster hits, and
-                timeless classics that match your unique interests. Whether
-                you're in the mood for an indie drama, a sci-fi adventure, or a
-                heartwarming romance, MovieRev is here to help you find the
-                perfect film for any occasion.
-              </v-card-text>
-            </v-card>
-          </template>
+    <div class="section4">
+      <div class="movies">
+        <h1><span id="bigletter">T</span>he most popular movies</h1>
+        <p>Stream the succesess,
+        <p> including the latest from DC and Warner Bros</p> + the comedies, dramas and the classics you love</p>
+      </div>
 
-          <template v-slot:item.2>
-            <v-card title="Review" flat>
-              <v-card-text>
-                Your voice matters at MovieRev. Share your thoughts and insights
-                on the movies you've watched. Write detailed reviews and provide
-                ratings to guide fellow movie enthusiasts. Whether you loved a
-                film or thought it fell short, your opinions help others make
-                informed viewing choices. Our community thrives on honest and
-                diverse perspectives, making MovieRev a trusted source for movie
-                recommendations and critiques.
-              </v-card-text>
-            </v-card>
-          </template>
+      <div class="movieexamples">
+        <img
+          src="https://assets-prd.ignimgs.com/2022/10/14/darkknightcanned-1665789495277.jpg?width=300&crop=1%3A1%2Csmart&auto=webp">
+        <img src="https://daviddas.com/wp-content/uploads/2019/06/Game-of-Thrones-300x300.jpg">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqvQgtMCguH6CR6sBy_nVfKoLBGvpFEuMBIyC78npfWw&s">
+        <img src="https://i1.sndcdn.com/artworks-0qJytq5kreMppHy7-N4Ex1g-t500x500.jpg">
+        <img src="https://i1.sndcdn.com/artworks-gE2k66khMJ7h-0-t500x500.jpg">
+        <img src="https://i1.sndcdn.com/artworks-jrzglYWBvs5zAizM-LQszyQ-t500x500.jpg">
+      </div>
 
-          <template v-slot:item.3>
-            <v-card title="Connect" flat>
-              <v-card-text>
-                MovieRev is more than just a review site; it's a community of
-                passionate movie lovers. Connect with other users, follow their
-                reviews, and engage in lively discussions about your favorite
-                films. Share your cinematic experiences, exchange
-                recommendations, and build a network of friends who share your
-                love for movies. At MovieRev, we bring people together through
-                the magic of cinema, fostering connections that go beyond the
-                screen.
-              </v-card-text>
-            </v-card>
-          </template>
-        </v-stepper>
-      </v-col>
-    </v-row>
+    </div>
   </v-app>
 </template>
 
 <style>
-h1 {
-  margin-top: 50px;
-  font-size: 2.5rem;
+.section1 {
+  background-image: url("https://assets.nflxext.com/ffe/siteui/vlv3/c0b69670-89a3-48ca-877f-45ba7a60c16f/db81a53f-1e95-40aa-8cb9-4e7f8e58e408/SE-sv-20240212-popsignuptwoweeks-perspective_alpha_website_large.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
-.dashboard-container {
-  margin: 30;
-  padding: 0;
-  box-sizing: border-box;
+.section1 {
+  height: 100vh;
+  width: 100vw;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.section1 h2 {
+  color: white;
+  text-wrap: wrap;
+  text-align: center;
+  font-size: 4rem;
+}
+
+.section1 h3 {
+  color: white;
+  text-wrap: wrap;
+  text-align: center;
+  font-size: 1.3rem;
+}
+
+::placeholder {
+  color: white;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.v-btn--large {
+  width: 300px;
+  height: 100px;
+  padding: 30px;
+  text-align: center;
+  outline: none;
+  background: red; 
+  color: white;
+  margin: 1rem auto; 
+}
+
+.v-btn--large:hover {
+  background: #a020f0;
+  transition-duration: 0.8s;
+  cursor: pointer;
+}
+
+.section2 {
+  width: 100vw;
+  background: black;
+  margin-top: -0.5rem;
+  padding: 30px;
+  color: white;
+  font-size: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-items: center;
+}
+
+.section2 h1 {
+  padding: 90px 0;
+  font-family: "Courier New", Courier, monospace;
+}
+
+.section2 img {
+  width: 300px;
+  height: 150px;
+  object-fit: cover;
+}
+
+.imgs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 1rem;
+  margin-top: 1rem;
+}
+
+
+
+.section4 {
+  background: black;
+  width: 100vw;
+  color: white;
+  padding: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-items: center;
+}
+
+.movieexamples {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 1rem;
+}
+
+.movies {
+  text-align: center;
+  padding: 90px 0;
+}
+
+
+.section4 h1 {
+  color: white;
+}
+
+#bigletter {
+  font-size: 4rem;
+  color: red;
+}
+
+.movieexamples img {
+  width: 300px;
+  height: 250px;
+  object-fit: contain;
+}
+
+.subscribe {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100vw;
+  gap: 2rem;
+  padding: 20px;
+  background: url("https://hbomax-images.warnermediacdn.com/module-assets/gradient2.jpg?host=wme-hbomax-drupal-prod.s3.amazonaws.com") no-repeat fixed;
+  background-size: cover;
+}
+
+
+.button {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  background: #A020F0;
+  color: white;
+  border-radius: 30px;
+  transition-duration: 0.8s;
+  width: 80%;
+  height: 20%;
+  cursor: pointer;
+}
+
+.button:hover {
+  background: white;
+  color: black;
+}
+
+@media screen and (max-width: 1100px) {
+
+  .section1 {
+    height: 100vh;
+  }
+
+  .section2 {
+    grid-template-columns: 1fr;
+  }
+
+  .imgs {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .section4 {
+    grid-template-columns: 1fr;
+  }
+
+  .movieexamples {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .movieexamples img {
+    width: 95%;
+  }
+
+
+}
+
+
+
+@media screen and (max-width: 700px) {
+
+  .imgs {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .imgs img {
+    max-width: 100%;
+  }
+
+  .section2 h1 {
+    text-align: center;
+  }
+
+}
+
+
+.section1 {
   height: 100vh;
 }
 
-.v-stepper {
-  max-width: 20000px;
+.section1 h1,
+h2,
+h3 {
+  font-size: 0.9rem;
+}
+
+
+.section2 h1 {
+  text-wrap: wrap;
+  font-size: 1.5rem;
+}
+
+
+.section3 h1 {
+  text-wrap: wrap;
+  font-size: 1rem;
+}
+
+.section3 img {
+  object-fit: contain;
+}
+
+.section4 h1 {
+  text-wrap: wrap;
+  font-size: 1.5rem;
+}
+
+.imgs img {
+  max-width: 100%;
+}
+
+
+.movieexamples img {
+  width: 100%;
+  height: 300px;
+  object-fit: contain;
+}
+
+.row {
+  width: 50%;
+  margin: 0 auto;
+  text-align: center;
 }
 </style>

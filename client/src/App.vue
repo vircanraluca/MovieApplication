@@ -1,9 +1,12 @@
 <template>
   <v-card>
     <v-layout>
-      <v-navigation-drawer expand-on-hover rail>
+      <v-navigation-drawer rail app color="black" class="navigation-drawer">
         <v-list>
-          <v-list-item title="MOVIEW"></v-list-item>
+          <v-list-item
+            prepend-avatar="https://randomuser.me/api/portraits/men/85.jpg"
+            class="white--text"
+          ></v-list-item>
         </v-list>
 
         <v-list density="compact" nav>
@@ -12,6 +15,7 @@
             prepend-icon="mdi-home"
             title="Home"
             value="home"
+            class="white--text"
           ></v-list-item>
           <v-list-item
             v-if="!isLoggedIn"
@@ -19,6 +23,7 @@
             prepend-icon="mdi-login"
             title="Login"
             value="login"
+            class="white--text"
           ></v-list-item>
           <v-list-item
             v-if="!isLoggedIn"
@@ -26,12 +31,14 @@
             prepend-icon="mdi-account-plus"
             title="Register"
             value="register"
+            class="white--text"
           ></v-list-item>
           <v-list-item
             to="/movies"
             prepend-icon="mdi-format-list-bulleted"
             title="Movies"
             value="movies"
+            class="white--text"
           ></v-list-item>
           <v-list-item
             v-if="isLoggedIn"
@@ -39,19 +46,16 @@
             prepend-icon="mdi-heart"
             title="Favorites"
             value="favorites"
+            class="white--text"
           ></v-list-item>
-          <v-list-item
-            to="/about"
-            prepend-icon="mdi-information"
-            title="About"
-            value="about"
-          ></v-list-item>
+
           <v-list-item
             v-if="isLoggedIn"
             prepend-icon="mdi-logout"
             title="Logout"
             @click="handleSignOut"
             value="logout"
+            class="white--text"
           ></v-list-item>
         </v-list>
       </v-navigation-drawer>
@@ -97,3 +101,15 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.navigation-drawer {
+  background-color: black !important;
+}
+.white--text {
+  color: white !important;
+}
+.red--icon {
+  color: red !important;
+}
+</style>
