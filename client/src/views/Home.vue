@@ -99,7 +99,7 @@
 .v-btn--large {
   width: 300px;
   height: 100px;
-  padding: 30px;
+  padding: 10px;
   text-align: center;
   outline: none;
   background: red; 

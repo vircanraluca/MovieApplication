@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h1>View Your Favorite Movies</h1>
+  <div class="favorite_section">
+    <h1><span id="bigletter">V</span>iew Your Favorite Movies</h1>
     <v-row dense>
       <v-col v-for="(movie, i) in favoriteMovies" :key="i" cols="12" md="4">
         <v-card class="mx-auto" max-width="380">
@@ -150,6 +150,18 @@ export default {
 </script>
 
 <style scoped>
+body {
+  background-color: black;
+  color: white;
+  margin: 0; /* Elimină marginile implicite ale body-ului */
+  padding: 0;
+}
+
+.favorite_section {
+  background-color: black;
+  color: white;
+  padding: 1rem; /* Adaugă padding pentru a evita textul lipit de marginea paginii */
+}
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
@@ -159,6 +171,9 @@ h1 {
   margin-top: 20px;
   margin-bottom: 50px;
   margin-left: 20px;
+  font-size: 50px;
+  justify-content: center; /* Centrează textul orizontal */
+  text-align: center; /* Asigură-te că textul este centrat */
 }
 .chevron-btn {
   margin-right: 8px;
@@ -180,5 +195,14 @@ h1 {
 .headline {
   font-size: 24px;
   font-weight: bold;
+}
+
+.section4 h1 {
+  color: white;
+}
+
+#bigletter {
+  font-size: 4rem;
+  color: red;
 }
 </style>
