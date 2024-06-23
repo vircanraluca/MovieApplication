@@ -14,6 +14,7 @@
               View Comments
             </v-btn>
             <v-spacer></v-spacer>
+            <v-btn icon="mdi-delete-outline"></v-btn>
             <v-btn
               icon
               :color="isFavorite(movie.id) ? 'red' : 'grey'"
