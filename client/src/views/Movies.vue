@@ -10,17 +10,17 @@
             movie.subtitle
           }}</v-card-subtitle>
           <v-card-actions>
-            <v-btn color="red" text @click="goToCommentsPage(movie.id)">
-              View Comments
-            </v-btn>
+            <v-btn color="red" text @click="goToCommentsPage(movie.id)"
+              >View Comments</v-btn
+            >
             <v-spacer></v-spacer>
             <v-btn
               icon
-              :color="movie.isFavorite ? 'red' : 'grey'"
+              :color="isFavorite(movie.id) ? 'red' : 'grey'"
               @click="toggleFavorite(movie)"
             >
               <v-icon>{{
-                movie.isFavorite ? "mdi-heart" : "mdi-heart-outline"
+                isFavorite(movie.id) ? "mdi-heart" : "mdi-heart-outline"
               }}</v-icon>
             </v-btn>
             <v-btn
@@ -43,11 +43,13 @@
 
 <script>
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+
 export default {
   data() {
     return {
       movies: [],
       currentUser: null,
+      favoriteMovies: [],
     };
   },
   methods: {
@@ -58,13 +60,29 @@ export default {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        // Set initial state for isFavorite
-        for (const movie of data) {
-          movie.isFavorite = movie.isFavorite || false; // Assume isFavorite is false if not defined
-        }
         this.movies = data;
       } catch (error) {
         console.error("Error fetching movies:", error);
+      }
+    },
+    async fetchUserFavorites(userId) {
+      const idToken = await this.currentUser.getIdToken();
+      try {
+        const response = await fetch(
+          `http://localhost:4000/favorites/${userId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${idToken}`,
+            },
+          }
+        );
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        this.favoriteMovies = data;
+      } catch (error) {
+        console.error("Error fetching favorite movies:", error);
       }
     },
     goToCommentsPage(movieId) {
@@ -77,7 +95,7 @@ export default {
         return;
       }
       const idToken = await currentUser.getIdToken();
-      movie.isFavorite = !movie.isFavorite;
+      const isCurrentlyFavorite = this.isFavorite(movie.id);
       try {
         const response = await fetch("http://localhost:4000/favorites", {
           method: "POST",
@@ -88,26 +106,38 @@ export default {
           body: JSON.stringify({
             userId: currentUser.uid,
             movieId: movie.id,
-            isFavorite: movie.isFavorite,
+            isFavorite: !isCurrentlyFavorite,
           }),
         });
         if (!response.ok) {
           throw new Error("Failed to update favorite status");
         }
+        if (isCurrentlyFavorite) {
+          this.favoriteMovies = this.favoriteMovies.filter(
+            (fav) => fav.id !== movie.id
+          );
+        } else {
+          this.favoriteMovies.push(movie);
+        }
       } catch (error) {
         console.error("Error updating favorite status:", error);
       }
     },
-  },
-  goToCommentsPage(movieId) {
-    this.$router.push({ name: "Comments", params: { id: movieId } });
+    isFavorite(movieId) {
+      return this.favoriteMovies.some((fav) => fav.id === movieId);
+    },
   },
   created() {
     this.fetchMovies();
-    // Ascultă schimbările de autentificare pentru a obține utilizatorul curent
     const auth = getAuth();
     onAuthStateChanged(auth, (user) => {
-      this.currentUser = user || null;
+      if (user) {
+        this.currentUser = user;
+        this.fetchUserFavorites(user.uid);
+      } else {
+        this.currentUser = null;
+        this.favoriteMovies = [];
+      }
     });
   },
 };
