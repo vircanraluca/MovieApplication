@@ -16,11 +16,11 @@
             <v-spacer></v-spacer>
             <v-btn
               icon
-              :color="movie.isFavorite ? 'red' : 'grey'"
+              :color="isFavorite(movie.id) ? 'red' : 'grey'"
               @click="toggleFavorite(movie)"
             >
               <v-icon>{{
-                movie.isFavorite ? "mdi-heart" : "mdi-heart-outline"
+                isFavorite(movie.id) ? "mdi-heart" : "mdi-heart-outline"
               }}</v-icon>
             </v-btn>
             <v-btn
@@ -43,6 +43,7 @@
 
 <script>
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+
 export default {
   data() {
     return {
@@ -102,26 +103,42 @@ export default {
       this.$router.push({ name: "Comments", params: { id: movieId } });
     },
     async toggleFavorite(movie) {
-      movie.isFavorite = !movie.isFavorite;
+      const currentUser = this.currentUser;
+      if (!currentUser) {
+        console.error("User is not authenticated");
+        return;
+      }
+      const idToken = await currentUser.getIdToken();
+      const isCurrentlyFavorite = this.isFavorite(movie.id);
       try {
-        const response = await fetch(
-          `http://localhost:4000/movies/${movie.id}`,
-          {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              isFavorite: movie.isFavorite,
-            }),
-          }
-        );
+        const response = await fetch("http://localhost:4000/favorites", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${idToken}`,
+          },
+          body: JSON.stringify({
+            userId: currentUser.uid,
+            movieId: movie.id,
+            isFavorite: !isCurrentlyFavorite,
+          }),
+        });
         if (!response.ok) {
           throw new Error("Failed to update favorite status");
+        }
+        if (isCurrentlyFavorite) {
+          this.favoriteMovies = this.favoriteMovies.filter(
+            (fav) => fav.id !== movie.id
+          );
+        } else {
+          this.favoriteMovies.push(movie);
         }
       } catch (error) {
         console.error("Error updating favorite status:", error);
       }
+    },
+    isFavorite(movieId) {
+      return this.favoriteMovies.some((fav) => fav.id === movieId);
     },
     toggleShowDescription(movie) {
       // Toggle show property for the clicked movie
@@ -130,6 +147,7 @@ export default {
   },
 };
 </script>
+
 <style scoped>
 .mx-auto {
   margin-left: auto;
