@@ -1,6 +1,6 @@
 <template>
   <div class="login-container">
-    <h1>REGISTER HERE</h1>
+    <h1><span id="bigletter">R</span>egister Here</h1>
     <v-img
       src="../assets/popcorn.png"
       alt="GastroDelights Image"
@@ -109,6 +109,7 @@ export default {
 h1 {
   text-align: center;
   margin-top: 50px;
+  font-size: 50px;
 }
 
 .v-sheet {
@@ -136,11 +137,29 @@ h1 {
   align-items: center;
   justify-content: center;
   height: 110vh;
+  background-color: black;
+  color: white;
+  padding: 1rem; /* Adaugă padding pentru a evita textul lipit de marginea paginii */
 }
 
 .login-form {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  background-color: black;
+}
+.section4 h1 {
+  color: white;
+}
+
+#bigletter {
+  font-size: 4rem;
+  color: red;
+}
+body {
+  background-color: black;
+  color: white;
+  margin: 0; /* Elimină marginile implicite ale body-ului */
+  padding: 0;
 }
 </style>
