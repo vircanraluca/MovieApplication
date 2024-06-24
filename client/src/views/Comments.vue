@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="comments_container">
     <v-container>
       <v-row>
         <v-col cols="12">
-          <h1>Add a Comment</h1>
+          <h1><span id="bigletter">A</span>dd a Comment</h1>
           <v-textarea
             v-model="newComment"
             label="Add your comment"
@@ -14,7 +14,7 @@
         </v-col>
         <!-- Tabelul adăugat mai jos -->
         <v-col cols="12">
-          <v-table>
+          <v-table class="table">
             <thead>
               <tr>
                 <th class="text-left">Email</th>
@@ -29,7 +29,7 @@
                 <td>
                   <v-btn
                     v-if="currentUser && comment.user === currentUser.email"
-                    color="red"
+                    color="#a52a2a"
                     class="ml-2"
                     @click="deleteComment(comment.id)"
                   >
@@ -38,7 +38,7 @@
 
                   <v-btn
                     v-if="currentUser && comment.user === currentUser.email"
-                    color="blue"
+                    color="#003566"
                     class="ml-2"
                     @click="openEditDialog(comment)"
                   >
@@ -239,7 +239,28 @@ export default {
 
 <style scoped>
 h1 {
-  margin-top: 20px;
-  margin-bottom: 20px;
+  text-align: center;
+  margin-top: 50px;
+  font-size: 50px;
+}
+
+.comments_container {
+  background-color: black;
+  color: white;
+}
+#bigletter {
+  font-size: 4rem;
+  color: red;
+}
+body {
+  background-color: black;
+  color: white;
+  margin: 0; /* Elimină marginile implicite ale body-ului */
+  padding: 0;
+}
+
+.table {
+  background-color: #242423;
+  color: white;
 }
 </style>
