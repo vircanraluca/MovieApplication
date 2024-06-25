@@ -263,4 +263,85 @@ body {
   background-color: #242423;
   color: white;
 }
+
+.v-btn {
+  margin-top: 10px;
+}
+.v-table {
+  width: 100%;
+  overflow-x: auto; /* Permite tabelului să fie scrollabil orizontal dacă depășește lățimea viewport-ului */
+}
+
+@media (max-width: 414px) {
+  /* Telefoane */
+  .table th,
+  .table td {
+    padding: 4px 10px;
+    font-size: 12px; /* Text mai mic pentru economisirea spațiului */
+  }
+  .v-btn {
+    min-width: 60px; /* Butoane mai mici */
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+}
+
+@media (min-width: 415px) and (max-width: 1024px) {
+  /* Tablete */
+  .table th,
+  .table td {
+    padding: 6px 12px;
+    font-size: 14px;
+  }
+  .v-btn {
+    min-width: 80px;
+    padding: 8px 10px;
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 1025px) {
+  /* Laptopuri */
+  .table th,
+  .table td {
+    padding: 8px 16px;
+    font-size: 16px;
+  }
+  .v-btn {
+    min-width: 100px;
+    padding: 10px 15px;
+    font-size: 16px;
+  }
+}
+
+.table th,
+.table td {
+  padding: 8px 16px;
+}
+
+.table th:nth-child(1),
+.table td:nth-child(1) {
+  width: 20%;
+}
+
+.table th:nth-child(2),
+.table td:nth-child(2) {
+  width: 60%;
+}
+
+.table th:nth-child(3),
+.table td:nth-child(3) {
+  width: 20%;
+}
+
+@media (max-width: 414px) {
+  .table th,
+  .table td {
+    padding: 4px 8px;
+  }
+}
+
+.action-btn {
+  margin-bottom: 8px; /* Adaugă o margine jos pentru a crea spațiu între butoane */
+}
 </style>
