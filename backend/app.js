@@ -23,6 +23,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 const fs = require("fs");
 
+const authenticateToken = require("./middleware/authMiddleware");
+
 app.post("/register", async (req, res) => {
   try {
     console.log("Received registration request:", req.body);
@@ -122,7 +124,7 @@ app.get("/comments/:movieId", async (req, res) => {
 });
 
 // Aplică verifyToken pentru rutele care necesită autentificare
-app.post("/comments/:movieId", async (req, res) => {
+app.post("/comments/:movieId", authenticateToken, async (req, res) => {
   try {
     const movieId = req.params.movieId;
     console.log(`Received POST request for movie ID: ${movieId}`);
@@ -146,7 +148,7 @@ app.post("/comments/:movieId", async (req, res) => {
   }
 });
 
-app.delete("/comments/:commentId", async (req, res) => {
+app.delete("/comments/:commentId", authenticateToken, async (req, res) => {
   try {
     const commentId = req.params.commentId;
     console.log(`Deleting comment with ID: ${commentId}`);
@@ -158,7 +160,7 @@ app.delete("/comments/:commentId", async (req, res) => {
   }
 });
 
-app.post("/favorites", async (req, res) => {
+app.post("/favorites", authenticateToken, async (req, res) => {
   try {
     const { movieId, isFavorite } = req.body;
     const idToken = req.headers.authorization?.split("Bearer ")[1];
@@ -189,18 +191,12 @@ app.post("/favorites", async (req, res) => {
   }
 });
 
-app.get("/favorites/:userId", async (req, res) => {
+app.get("/favorites/:userId", authenticateToken, async (req, res) => {
   try {
     const { userId } = req.params;
-    const idToken = req.headers.authorization?.split("Bearer ")[1];
 
-    if (!idToken) {
-      return res.status(401).json({ error: "Unauthorized" });
-    }
-
-    const decodedToken = await admin.auth().verifyIdToken(idToken);
-
-    if (decodedToken.uid !== userId) {
+    // Verificăm dacă utilizatorul autentificat are permisiunea de a accesa resursa
+    if (req.user.uid !== userId) {
       return res.status(403).json({ error: "Forbidden: Access denied" });
     }
 
@@ -208,21 +204,27 @@ app.get("/favorites/:userId", async (req, res) => {
       .collection("favorites")
       .where("userId", "==", userId)
       .get();
+
     if (favoritesSnapshot.empty) {
       return res.status(404).json({ message: "No favorites found" });
     }
+
     const favoriteMovies = [];
     const moviePromises = [];
+
     favoritesSnapshot.forEach((doc) => {
       const movieId = doc.data().movieId;
       moviePromises.push(db.collection("movies").doc(movieId).get());
     });
+
     const movieDocs = await Promise.all(moviePromises);
+
     movieDocs.forEach((doc) => {
       if (doc.exists) {
         favoriteMovies.push({ id: doc.id, ...doc.data() });
       }
     });
+
     res.status(200).json(favoriteMovies);
   } catch (error) {
     console.error("Error fetching favorite movies:", error);
