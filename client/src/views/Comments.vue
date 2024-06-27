@@ -155,12 +155,19 @@ export default {
       }
       console.log("Attempting to delete comment with ID:", commentId); // Log pentru debug
       try {
+        const currentUser = this.currentUser;
+        if (!currentUser) {
+          throw new Error("User not authenticated");
+        }
+
+        const idToken = await currentUser.getIdToken();
         const response = await fetch(
           `http://localhost:4000/comments/${commentId}`,
           {
             method: "DELETE",
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${idToken}`,
             },
           }
         );
@@ -177,7 +184,6 @@ export default {
         console.error("Error deleting comment:", error);
       }
     },
-
     openEditDialog(comment) {
       this.editedComment = comment.text;
       this.currentCommentId = comment.id;
