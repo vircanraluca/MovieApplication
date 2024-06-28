@@ -200,12 +200,19 @@ export default {
         return;
       }
       try {
+        const currentUser = this.currentUser;
+        if (!currentUser) {
+          throw new Error("User not authenticated");
+        }
+
+        const idToken = await currentUser.getIdToken();
         const response = await fetch(
           `http://localhost:4000/comments/${this.currentCommentId}`,
           {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${idToken}`,
             },
             body: JSON.stringify({ text: this.editedComment }),
           }

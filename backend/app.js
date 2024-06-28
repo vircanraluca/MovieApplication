@@ -180,6 +180,25 @@ app.delete("/comments/:commentId", authenticateToken, async (req, res) => {
   }
 });
 
+app.put("/comments/:commentId", authenticateToken, async (req, res) => {
+  try {
+    const commentId = req.params.commentId;
+    const { text } = req.body;
+    console.log(`Updating comment with ID: ${commentId}`);
+
+    const commentRef = db.collection("comments").doc(commentId);
+    await commentRef.update({ text });
+
+    const updatedComment = (await commentRef.get()).data();
+    updatedComment.id = commentId;
+
+    res.json(updatedComment);
+  } catch (error) {
+    console.error("Error updating comment:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 app.post("/favorites", authenticateToken, async (req, res) => {
   try {
     const { movieId, isFavorite } = req.body;
