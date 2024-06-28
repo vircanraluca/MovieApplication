@@ -80,21 +80,33 @@ app.get("/movies", async (req, res) => {
   }
 });
 
-app.get("/movies/:id", async (req, res) => {
+app.get("/comments/:movieId", async (req, res) => {
   try {
-    const movieId = req.params.id;
-    const movieRef = db.collection("movies").doc(movieId);
-    const doc = await movieRef.get();
-    if (!doc.exists) {
-      res.status(404).json({ message: "Movie not found" });
-    } else {
-      res.status(200).json(doc.data());
+    const movieId = req.params.movieId;
+    console.log(`Fetching comments for movie ID: ${movieId}`);
+
+    const commentsRef = db
+      .collection("comments")
+      .where("movieId", "==", movieId);
+    const snapshot = await commentsRef.get();
+
+    if (snapshot.empty) {
+      return res.status(404).json({ error: "No comments found" });
     }
+
+    const comments = [];
+    snapshot.forEach((doc) => {
+      const commentData = doc.data();
+      console.log("Document ID:", doc.id); // Log document ID
+      const commentWithId = { id: doc.id, ...commentData };
+      comments.push(commentWithId);
+    });
+
+    console.log("Final comments array:", comments);
+    res.status(200).json(comments);
   } catch (error) {
-    console.error("Error fetching movie details:", error);
-    res
-      .status(500)
-      .json({ error: "An error occurred while fetching movie details." });
+    console.error("Error fetching comments:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
@@ -103,19 +115,23 @@ app.get("/comments/:movieId", async (req, res) => {
     const movieId = req.params.movieId;
     console.log(`Fetching comments for movie ID: ${movieId}`);
 
-    const commentsSnapshot = await db
+    const commentsRef = db
       .collection("comments")
-      .where("movieId", "==", movieId)
-      .get();
-    if (commentsSnapshot.empty) {
+      .where("movieId", "==", movieId);
+    const snapshot = await commentsRef.get();
+
+    if (snapshot.empty) {
       return res.status(404).json({ error: "No comments found" });
     }
 
     const comments = [];
-    commentsSnapshot.forEach((doc) => {
-      comments.push(doc.data());
+    snapshot.forEach((doc) => {
+      const commentData = doc.data();
+      const commentWithId = { id: doc.id, ...commentData };
+      comments.push(commentWithId);
     });
 
+    console.log("Final comments array:", comments);
     res.status(200).json(comments);
   } catch (error) {
     console.error("Error fetching comments:", error);
@@ -124,6 +140,7 @@ app.get("/comments/:movieId", async (req, res) => {
 });
 
 // Aplică verifyToken pentru rutele care necesită autentificare
+
 app.post("/comments/:movieId", authenticateToken, async (req, res) => {
   try {
     const movieId = req.params.movieId;
@@ -135,13 +152,16 @@ app.post("/comments/:movieId", authenticateToken, async (req, res) => {
       return res.status(400).json({ error: "Bad Request: Missing fields" });
     }
 
-    await db.collection("comments").add({
+    const newCommentRef = await db.collection("comments").add({
       user,
       text,
       movieId,
       timestamp: new Date().toISOString(),
     });
-    res.status(200).json({ message: "Comment added successfully" });
+
+    const newComment = await newCommentRef.get();
+
+    res.status(200).json({ id: newCommentRef.id, ...newComment.data() });
   } catch (error) {
     console.error("Error adding comment:", error);
     res.status(500).json({ error: "Internal Server Error" });

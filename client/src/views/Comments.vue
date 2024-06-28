@@ -119,6 +119,7 @@ export default {
 
           if (response.ok) {
             const newComment = await response.json();
+            console.log("New comment data:", newComment); // Log new comment data
             this.comments.push({ id: newComment.id, ...newComment });
             this.newComment = "";
           } else {
@@ -135,15 +136,19 @@ export default {
         const response = await fetch(
           `http://localhost:4000/comments/${this.id}`
         );
-        if (response.ok) {
-          const commentsData = await response.json();
-          this.comments = Object.keys(commentsData).map((key) => {
-            return { id: key, ...commentsData[key] };
-          });
-        } else {
-          const errorText = await response.text();
-          console.error("Error fetching comments:", errorText);
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
         }
+        const data = await response.json();
+        console.log("Raw comments data:", data); // Log raw data
+
+        this.comments = data.map((comment) => {
+          console.log("Processing comment:", comment); // Log each comment
+          console.log("Comment ID:", comment.id); // Log each comment ID
+          return { id: comment.id, ...comment };
+        });
+
+        console.log("Processed comments:", this.comments); // Log processed comments
       } catch (error) {
         console.error("Error fetching comments:", error);
       }
