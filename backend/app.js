@@ -271,6 +271,38 @@ app.get("/favorites/:userId", authenticateToken, async (req, res) => {
   }
 });
 
+app.delete(
+  "/favorites/:userId/:movieId",
+  authenticateToken,
+  async (req, res) => {
+    try {
+      const { userId, movieId } = req.params;
+      console.log(
+        `Deleting favorite movie with ID: ${movieId} for user: ${userId}`
+      );
+
+      const favoritesRef = db
+        .collection("favorites")
+        .where("userId", "==", userId)
+        .where("movieId", "==", movieId);
+      const snapshot = await favoritesRef.get();
+
+      if (snapshot.empty) {
+        return res.status(404).json({ error: "Favorite movie not found" });
+      }
+
+      snapshot.forEach(async (doc) => {
+        await db.collection("favorites").doc(doc.id).delete();
+      });
+
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Error deleting favorite movie:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  }
+);
+
 app.get("/", (req, res) => {
   res.send("Server is up and running");
 });

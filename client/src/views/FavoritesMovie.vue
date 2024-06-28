@@ -14,7 +14,10 @@
               View Comments
             </v-btn>
             <v-spacer></v-spacer>
-            <v-btn icon="mdi-delete-outline"></v-btn>
+            <v-btn
+              icon="mdi-delete-outline"
+              @click="deleteFavorite(movie.id)"
+            ></v-btn>
             <v-btn
               icon
               :color="isFavorite(movie.id) ? 'red' : 'grey'"
@@ -136,6 +139,42 @@ export default {
         }
       } catch (error) {
         console.error("Error updating favorite status:", error);
+      }
+    },
+    async deleteFavorite(movieId) {
+      if (!movieId) {
+        console.error("Invalid movie ID");
+        return;
+      }
+      try {
+        const currentUser = this.currentUser;
+        if (!currentUser) {
+          throw new Error("User not authenticated");
+        }
+
+        const idToken = await currentUser.getIdToken();
+        const response = await fetch(
+          `http://localhost:4000/favorites/${currentUser.uid}/${movieId}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${idToken}`,
+            },
+          }
+        );
+
+        if (response.ok) {
+          // Verifică dacă this.movies este un array înainte de a aplica filter
+          if (Array.isArray(this.movies)) {
+            this.movies = this.movies.filter((movie) => movie.id !== movieId);
+          }
+          console.log("Favorite movie deleted successfully.");
+        } else {
+          console.error("Error deleting favorite movie:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error deleting favorite movie:", error);
       }
     },
     isFavorite(movieId) {
