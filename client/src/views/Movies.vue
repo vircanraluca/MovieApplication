@@ -147,14 +147,14 @@ export default {
 body {
   background-color: black;
   color: white;
-  margin: 0; /* Elimină marginile implicite ale body-ului */
+  margin: 0;
   padding: 0;
 }
 
 .movies_section {
   background-color: black;
   color: white;
-  padding: 1rem; /* Adaugă padding pentru a evita textul lipit de marginea paginii */
+  padding: 1rem;
 }
 
 h1 {
@@ -162,8 +162,8 @@ h1 {
   margin-bottom: 50px;
   margin-left: 20px;
   font-size: 50px;
-  justify-content: center; /* Centrează textul orizontal */
-  text-align: center; /* Asigură-te că textul este centrat */
+  justify-content: center;
+  text-align: center;
 }
 .mx-auto {
   margin-left: auto;

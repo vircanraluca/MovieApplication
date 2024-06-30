@@ -81,11 +81,10 @@ export default {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        // Initialize show property for each movie and set isFavorite
         this.favoriteMovies = data.map((movie) => ({
           ...movie,
-          show: false, // Initialize show property to false
-          isFavorite: movie.isFavorite || false, // Assume isFavorite is false if not defined
+          show: false,
+          isFavorite: movie.isFavorite || false,
         }));
       } catch (error) {
         console.error("Error fetching favorite movies:", error);
@@ -165,7 +164,6 @@ export default {
         );
 
         if (response.ok) {
-          // Verifică dacă this.movies este un array înainte de a aplica filter
           if (Array.isArray(this.movies)) {
             this.movies = this.movies.filter((movie) => movie.id !== movieId);
           }
@@ -181,7 +179,6 @@ export default {
       return this.favoriteMovies.some((fav) => fav.id === movieId);
     },
     toggleShowDescription(movie) {
-      // Toggle show property for the clicked movie
       movie.show = !movie.show;
     },
   },
@@ -192,14 +189,14 @@ export default {
 body {
   background-color: black;
   color: white;
-  margin: 0; /* Elimină marginile implicite ale body-ului */
+  margin: 0;
   padding: 0;
 }
 
 .favorite_section {
   background-color: black;
   color: white;
-  padding: 1rem; /* Adaugă padding pentru a evita textul lipit de marginea paginii */
+  padding: 1rem;
 }
 .mx-auto {
   margin-left: auto;
@@ -211,8 +208,8 @@ h1 {
   margin-bottom: 50px;
   margin-left: 20px;
   font-size: 50px;
-  justify-content: center; /* Centrează textul orizontal */
-  text-align: center; /* Asigură-te că textul este centrat */
+  justify-content: center;
+  text-align: center;
 }
 .chevron-btn {
   margin-right: 8px;

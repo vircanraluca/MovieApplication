@@ -97,7 +97,7 @@ app.get("/comments/:movieId", async (req, res) => {
     const comments = [];
     snapshot.forEach((doc) => {
       const commentData = doc.data();
-      console.log("Document ID:", doc.id); // Log document ID
+      console.log("Document ID:", doc.id);
       const commentWithId = { id: doc.id, ...commentData };
       comments.push(commentWithId);
     });
@@ -138,8 +138,6 @@ app.get("/comments/:movieId", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
-// Aplică verifyToken pentru rutele care necesită autentificare
 
 app.post("/comments/:movieId", authenticateToken, async (req, res) => {
   try {
@@ -233,8 +231,6 @@ app.post("/favorites", authenticateToken, async (req, res) => {
 app.get("/favorites/:userId", authenticateToken, async (req, res) => {
   try {
     const { userId } = req.params;
-
-    // Verificăm dacă utilizatorul autentificat are permisiunea de a accesa resursa
     if (req.user.uid !== userId) {
       return res.status(403).json({ error: "Forbidden: Access denied" });
     }

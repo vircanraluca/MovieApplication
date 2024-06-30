@@ -12,7 +12,6 @@
           ></v-textarea>
           <v-btn color="#a52a2a" @click="addComment">Submit</v-btn>
         </v-col>
-        <!-- Tabelul adăugat mai jos -->
         <v-col cols="12">
           <v-table class="table">
             <thead>
@@ -119,7 +118,7 @@ export default {
 
           if (response.ok) {
             const newComment = await response.json();
-            console.log("New comment data:", newComment); // Log new comment data
+            console.log("New comment data:", newComment);
             this.comments.push({ id: newComment.id, ...newComment });
             this.newComment = "";
           } else {
@@ -140,15 +139,15 @@ export default {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
-        console.log("Raw comments data:", data); // Log raw data
+        console.log("Raw comments data:", data);
 
         this.comments = data.map((comment) => {
-          console.log("Processing comment:", comment); // Log each comment
-          console.log("Comment ID:", comment.id); // Log each comment ID
+          console.log("Processing comment:", comment);
+          console.log("Comment ID:", comment.id);
           return { id: comment.id, ...comment };
         });
 
-        console.log("Processed comments:", this.comments); // Log processed comments
+        console.log("Processed comments:", this.comments);
       } catch (error) {
         console.error("Error fetching comments:", error);
       }
@@ -158,7 +157,7 @@ export default {
         console.error("Invalid comment ID");
         return;
       }
-      console.log("Attempting to delete comment with ID:", commentId); // Log pentru debug
+      console.log("Attempting to delete comment with ID:", commentId);
       try {
         const currentUser = this.currentUser;
         if (!currentUser) {
@@ -273,7 +272,7 @@ h1 {
 body {
   background-color: black;
   color: white;
-  margin: 0; /* Elimină marginile implicite ale body-ului */
+  margin: 0;
   padding: 0;
 }
 
@@ -287,25 +286,23 @@ body {
 }
 .v-table {
   width: 100%;
-  overflow-x: auto; /* Permite tabelului să fie scrollabil orizontal dacă depășește lățimea viewport-ului */
+  overflow-x: auto;
 }
 
 @media (max-width: 414px) {
-  /* Telefoane */
   .table th,
   .table td {
     padding: 4px 10px;
-    font-size: 12px; /* Text mai mic pentru economisirea spațiului */
+    font-size: 12px;
   }
   .v-btn {
-    min-width: 60px; /* Butoane mai mici */
+    min-width: 60px;
     padding: 6px 8px;
     font-size: 12px;
   }
 }
 
 @media (min-width: 415px) and (max-width: 1024px) {
-  /* Tablete */
   .table th,
   .table td {
     padding: 6px 12px;
@@ -319,7 +316,6 @@ body {
 }
 
 @media (min-width: 1025px) {
-  /* Laptopuri */
   .table th,
   .table td {
     padding: 8px 16px;
@@ -360,6 +356,6 @@ body {
 }
 
 .action-btn {
-  margin-bottom: 8px; /* Adaugă o margine jos pentru a crea spațiu între butoane */
+  margin-bottom: 8px;
 }
 </style>

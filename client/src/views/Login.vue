@@ -141,7 +141,7 @@ h1 {
   height: 110vh;
   background-color: black;
   color: white;
-  padding: 1rem; /* Adaugă padding pentru a evita textul lipit de marginea paginii */
+  padding: 1rem;
 }
 
 .login-form {
@@ -161,7 +161,7 @@ h1 {
 body {
   background-color: black;
   color: white;
-  margin: 0; /* Elimină marginile implicite ale body-ului */
+  margin: 0;
   padding: 0;
 }
 </style>
