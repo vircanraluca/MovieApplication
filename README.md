@@ -34,6 +34,14 @@ This robust and interactive platform ensures a secure and engaging user experien
 - Login Page
 ![image](https://github.com/vircanraluca/MovieApplication/assets/115553717/86b4d7a8-d798-4065-a98e-395802f08958)
 
+- View Selection Of Movies Page
+![image](https://github.com/vircanraluca/MovieApplication/assets/115553717/55949cc8-8f7b-4dec-bafe-a2897a351fc3)
+
+- Add Comment Page
+![image](https://github.com/vircanraluca/MovieApplication/assets/115553717/51e2990b-19a4-45ed-a0b5-82dbd50705d2)
+
+
+
 
 
 
