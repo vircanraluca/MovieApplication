@@ -7,7 +7,7 @@ This application, designed with Vuetify, allows users to discover and interact w
 
 Users can register and log in through Firebase Authentication, ensuring a secure and personalized experience.
 
--Favorites Management:
+- Favorites Management:
 
 Users can add movies to their favorites list for easy access.
 The app allows users to remove movies from their favorites list as well.
