@@ -12,7 +12,7 @@ Users can register and log in through Firebase Authentication, ensuring a secure
 Users can add movies to their favorites list for easy access.
 The app allows users to remove movies from their favorites list as well.
 
--Commenting System:
+- Commenting System:
 
 Users can add comments to movies to share their thoughts and reviews.
 Comments can be deleted or edited by the users who posted them, providing flexibility and control over their content.
