@@ -24,3 +24,19 @@ All CRUD operations are secured through a middleware layer, ensuring that only a
 This robust and interactive platform ensures a secure and engaging user experience, making it easy to explore, review, and manage movies.
 
 
+- Dashboard Page
+![image](https://github.com/vircanraluca/MovieApplication/assets/115553717/fa4aab98-68a5-43d0-83d6-ca2b03bc9cca)
+![image](https://github.com/vircanraluca/MovieApplication/assets/115553717/d04a060b-d797-4ccb-89e5-607723c7b167)
+
+- Register Page
+![image](https://github.com/vircanraluca/MovieApplication/assets/115553717/bc6b5b00-d072-42d8-81b3-d500a0b3ad32)
+
+- Login Page
+![image](https://github.com/vircanraluca/MovieApplication/assets/115553717/86b4d7a8-d798-4065-a98e-395802f08958)
+
+
+
+
+
+
+
